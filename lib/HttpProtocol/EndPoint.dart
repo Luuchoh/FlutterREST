@@ -25,7 +25,7 @@ class EndPoint {
   }
 
   static generateEndPointUrl(resource) {
-    return Uri.https('${Constant.DOMAIN}','$resource');
+    return Uri.https('${Constant.DOMAIN}','$resource', {'limit': '5'});
   }
 
 }

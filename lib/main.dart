@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rest_api/CardView/PostCard.dart';
+import 'package:flutter_rest_api/Class/Post.dart';
 import 'package:flutter_rest_api/Class/User.dart';
 
 void main() {
@@ -49,24 +51,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
+  GlobalKey<AnimatedListState> key = GlobalKey();
   User user = User();
+  var data;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   void initState() {
     getProfile();
+    getListPost();
   }
 
   getProfile() async{
@@ -77,6 +71,13 @@ class _MyHomePageState extends State<MyHomePage> {
         this.user = user;
       });
     }
+  }
+
+  getListPost() async{
+    var data = await Post().getPost();
+    setState(() {
+      this.data = data;
+    });
   }
 
   @override
@@ -104,25 +105,32 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
+      body: (data is Widget)
+              ? data
+              : (data != null)
+                ? loadListView()
+                : LinearProgressIndicator(),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: newPost,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  newPost() {
+
+  }
+
+  loadListView() {
+    return AnimatedList(
+      key: key,
+      initialItemCount: data.length,
+      shrinkWrap: false,
+      itemBuilder: (context, index, animation) {
+        return PostCard(this.data[index], this.user);
+      }
+    );
+  }
+
 }

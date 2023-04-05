@@ -27,7 +27,7 @@ class HTTPExecute {
     return validateResponse(response);
   }
 
-  loadPost(Map parameters) async{
+  loadPost(var parameters) async{
     var response = await http.post(this.endPointUrl, body: parameters);
     return validateResponse(response);
   }
@@ -37,7 +37,7 @@ class HTTPExecute {
     return validateResponse(response);
   }
 
-  loadPut(Map parameters) async{
+  loadPut(var parameters) async{
     var response = await http.put(this.endPointUrl, body: parameters);
     return validateResponse(response);
   }

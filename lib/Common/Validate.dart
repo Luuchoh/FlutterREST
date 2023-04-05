@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rest_api/Common/Constant.dart';
 
-typedef void VoidCallBackParam(Map parameters);
+typedef void VoidCallBackParam(var parameters);
 
 class Validate {
 
@@ -58,6 +58,10 @@ class Validate {
     return (data.containsKey(key) && data[key] != null)
             ? data[key]
             : defaul;
+  }
+
+  int checkInteger(var data) {
+    return (data is String) ? int.parse(data) : data;
   }
 
 }
