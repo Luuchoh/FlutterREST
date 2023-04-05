@@ -9,25 +9,37 @@ class HTTPExecute {
   HTTPExecute(this.endPointUrl);
 
 
+  get() async{
+    return await Validate.connectionError(method: loadGet);
+  }
+  post(Map parameters) async{
+    return await Validate.connectionError(methodParam: loadPost, parameters: parameters);
+  }
+  put(Map parameters) async{
+    return await Validate.connectionError(methodParam: loadPut, parameters: parameters);
+  }
+  delete() async{
+    return await Validate.connectionError(method: loadDelete);
+  }
+
   loadGet() async{
     var response = await http.get(this.endPointUrl);
-    validateResponse(response);
+    return validateResponse(response);
   }
 
   loadPost(Map parameters) async{
     var response = await http.post(this.endPointUrl, body: parameters);
-    validateResponse(response);
-
+    return validateResponse(response);
   }
 
   loadDelete() async{
     var response = await http.delete(this.endPointUrl);
-    validateResponse(response);
+    return validateResponse(response);
   }
 
   loadPut(Map parameters) async{
     var response = await http.put(this.endPointUrl, body: parameters);
-    validateResponse(response);
+    return validateResponse(response);
   }
 
   validateResponse(response) {
