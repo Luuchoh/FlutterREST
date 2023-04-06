@@ -35,4 +35,25 @@ class Post {
   getList(data) {
     return (data as List).map((e) => Post.fromJson(e)).toList();
   }
+
+  Future update(parameters) async{
+    var data = await EndPoint.updatePosts(parameters);
+    print('RESPUESTA $data');
+
+    return Validate(data).isWidget(getObject);
+  }
+
+  getObject(data) {
+    return Post.fromJson(data);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': '$id',
+      'title': title,
+      'body': body,
+      'userId': '$userId',
+    };
+  }
+
 }

@@ -18,6 +18,7 @@ class FormPostPageState extends State<FormPostPage> {
   Post post;
   TextEditingController ctrlTitle = TextEditingController();
   TextEditingController ctrlPost = TextEditingController();
+  GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   FormPostPageState(this.post);
 
@@ -32,15 +33,18 @@ class FormPostPageState extends State<FormPostPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text((this.post != null) ? 'Editar Post': 'Nuevo Post'),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.all(20.0),
-          child: Form(
-            child: formUI(),
+    return ScaffoldMessenger(
+      key: scaffoldMessengerKey,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text((this.post != null) ? 'Editar Post': 'Nuevo Post'),
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.all(20.0),
+            child: Form(
+              child: formUI(),
+            ),
           ),
         ),
       ),
@@ -105,7 +109,24 @@ class FormPostPageState extends State<FormPostPage> {
     );
   }
 
-  save() {
+  save() async{
+    if(post != null) {
+      var data = await Post().update(getText(post).toMap());
+      if(data != null) error(data);
+    }
+  }
 
+  error(data) {
+    if(data is Widget) {
+      scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(content: data, backgroundColor: Colors.blue,));
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  Post getText(Post post) {
+    post.title = ctrlTitle.text;
+    post.body = ctrlPost.text;
+    return post;
   }
 }
