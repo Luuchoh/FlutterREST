@@ -72,7 +72,7 @@ class PostCardState extends State<PostCard> {
 
   goFormPage() {
     if(widget.user.id == userPost.id) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => FormPostPage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => FormPostPage(post)));
     }
   }
   
