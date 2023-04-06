@@ -50,6 +50,11 @@ class Post {
     return Validate(data).isWidget(getObject);
   }
 
+  Future delete() async {
+    var data = await EndPoint.deletePosts(id);
+    return data;
+  }
+
   getObject(data) {
     return Post.fromJson(data);
   }

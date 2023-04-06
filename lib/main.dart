@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   GlobalKey<AnimatedListState> key = GlobalKey();
   User user = User();
   var data;
-
+  int? index;
 
   @override
   void initState() {
@@ -138,9 +138,32 @@ class _MyHomePageState extends State<MyHomePage> {
       initialItemCount: data.length,
       shrinkWrap: false,
       itemBuilder: (context, index, animation) {
-        return PostCard(this.data[index], this.user);
+        Post post = this.data[index];
+        return Dismissible(
+          key: ObjectKey(post),
+          onDismissed: (direction) async {
+            var data = await post.delete();
+            setState(() {
+              this.index = index;
+              removePost();
+            });
+            if(data is Widget && data != null) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: data, backgroundColor: Colors.deepPurple,));
+              this.data.insert(this.index, post);
+              key.currentState?.insertItem(index);
+            }
+          },
+          background: Container(color: Colors.deepPurple,),
+          child: PostCard(this.data[index], this.user)
+        );
       }
     );
+  }
+
+  removePost() {
+    this.data.removeAt(index);
+    key.currentState?.removeItem(index!, (context, animation) => Container());
+
   }
 
 }

@@ -123,7 +123,7 @@ class FormPostPageState extends State<FormPostPage> {
 
   error(data) {
     if(data is Widget) {
-      scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(content: data, backgroundColor: Colors.blue,));
+      scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(content: data, backgroundColor: Colors.deepPurple,));
     } else {
       if (post == null) widget.voidCallBackParams!(data);
       Navigator.of(context).pop();
