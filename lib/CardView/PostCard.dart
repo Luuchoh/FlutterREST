@@ -31,11 +31,14 @@ class PostCardState extends State<PostCard> {
 
   getUserPost() async{
     var user = await User().getUser(post.userId);
-    if (user != null && user is !Widget) {
-      setState(() {
-        this.userPost = user;
-      });
+    if(mounted){
+      if (user != null && user is !Widget) {
+        setState(() {
+          userPost = user;
+        });
+      }
     }
+
   }
 
   @override
@@ -72,7 +75,7 @@ class PostCardState extends State<PostCard> {
 
   goFormPage() {
     if(widget.user.id == userPost.id) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => FormPostPage(post)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => FormPostPage(post: post)));
     }
   }
   

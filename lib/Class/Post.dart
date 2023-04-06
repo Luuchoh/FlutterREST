@@ -43,6 +43,13 @@ class Post {
     return Validate(data).isWidget(getObject);
   }
 
+  Future create(parameters) async{
+    var data = await EndPoint.insertPosts(parameters);
+    print('RESPUESTA $data');
+
+    return Validate(data).isWidget(getObject);
+  }
+
   getObject(data) {
     return Post.fromJson(data);
   }

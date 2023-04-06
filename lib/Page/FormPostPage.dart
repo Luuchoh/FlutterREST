@@ -2,12 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Class/Post.dart';
+import '../Class/User.dart';
+import '../Common/Validate.dart';
 
 class FormPostPage extends StatefulWidget {
 
-  Post post;
+  Post? post;
+  User? user = User();
+  VoidCallBackParam? voidCallBackParams;
 
-  FormPostPage(this.post);
+  FormPostPage({this.post, this.voidCallBackParams, this.user});
 
   @override
   State<StatefulWidget> createState() => FormPostPageState(post);
@@ -15,7 +19,7 @@ class FormPostPage extends StatefulWidget {
 }
 class FormPostPageState extends State<FormPostPage> {
 
-  Post post;
+  Post? post;
   TextEditingController ctrlTitle = TextEditingController();
   TextEditingController ctrlPost = TextEditingController();
   GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -26,8 +30,8 @@ class FormPostPageState extends State<FormPostPage> {
   @override
   void initState() {
     if(post != null) {
-      ctrlTitle.text = post.title!;
-      ctrlPost.text = post.body!;
+      ctrlTitle.text = post!.title!;
+      ctrlPost.text = post!.body!;
     }
   }
 
@@ -110,16 +114,18 @@ class FormPostPageState extends State<FormPostPage> {
   }
 
   save() async{
-    if(post != null) {
-      var data = await Post().update(getText(post).toMap());
-      if(data != null) error(data);
-    }
+    var data = (post != null)
+      ? await Post().update(getText(post!).toMap())
+      : await Post().create({'title': ctrlTitle.text, 'body': ctrlPost.text, 'userId': '${widget.user?.id}'});
+
+    if(data != null) error(data);
   }
 
   error(data) {
     if(data is Widget) {
       scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(content: data, backgroundColor: Colors.blue,));
     } else {
+      if (post == null) widget.voidCallBackParams!(data);
       Navigator.of(context).pop();
     }
   }

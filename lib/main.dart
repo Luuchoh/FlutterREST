@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rest_api/CardView/PostCard.dart';
 import 'package:flutter_rest_api/Class/Post.dart';
 import 'package:flutter_rest_api/Class/User.dart';
+import 'package:flutter_rest_api/Page/FormPostPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -66,18 +67,22 @@ class _MyHomePageState extends State<MyHomePage> {
   getProfile() async{
     var user = await User().getUser(1);
 
-    if (user != null && user is !Widget) {
-      setState(() {
-        this.user = user;
-      });
-    }
+      if (user != null && user is !Widget) {
+        setState(() {
+          this.user = user;
+        });
+      }
+
   }
 
   getListPost() async{
     var data = await Post().getPost();
-    setState(() {
-      this.data = data;
-    });
+    if(mounted) {
+      setState(() {
+        this.data = data;
+      });
+    }
+
   }
 
   @override
@@ -119,7 +124,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   newPost() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => FormPostPage(voidCallBackParams: insertPost, user: user,)));
+  }
 
+  insertPost(post) {
+    this.data.insert(this.data.length, post);
+    this.key.currentState?.insertItem(this.data.length-1);
   }
 
   loadListView() {
